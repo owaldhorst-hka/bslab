@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
         
-        // check if logfile is accassible
+        // check if logfile can be accessed
         FILE* logFile = fopen(argv[2], "w+");
         
         if(logFile == NULL || (logFileName= realpath(argv[2], NULL)) == NULL) {
@@ -93,8 +93,9 @@ int main(int argc, char *argv[]) {
         FsInfo->contFile= containerFileName;
         FsInfo->logFile= logFileName;
         
-        // adjust arguments
-        argv+= 2; argc-= 2;
+        // adjust arguments, add option "-s" for single threaded
+        argv+= 1; argc-= 1;
+        argv[1]= "-s";
     }
     else {
         fprintf(stderr, "Usage: %s containerfile logfile mountpoint\n", argv[0]);

@@ -36,9 +36,7 @@ int BlockDevice::create(const char *path) {
     // Open Container file
     contFile = ::open(path, O_EXCL | O_RDWR | O_CREAT | O_TRUNC, 0666);
     if (contFile < 0) {
-        if (errno == EEXIST)
-            error("container file already exists");
-        else
+        if (errno != EEXIST)
             error("unable to create container file");
     }
     

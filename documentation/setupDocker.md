@@ -9,7 +9,7 @@ Falls man (auf Linux oder Mac OS) FUSE nicht nativ installieren möchte oder (au
 * Vorinstallierte FUSE-Bibliotheken
 * Werkzeuge für Übersetzen und Fehlersuche
 * bash inkl. wichtiger Kommandozeilen-Werkzeuge
-* Möglichkeit zum Entwickeln mit Hilfe von Clion/Windows über eine Remote Toolchain
+* Möglichkeit zum Entwickeln mit Hilfe von CLion/Windows über eine Remote Toolchain
 
 ## Installation von Docker
 
@@ -25,17 +25,19 @@ ausführbar  machen. Danach kann der Container mit dem Kommando
 
 	./runDocker.sh
 	
-gestartet werden. Mit dem Container startet eine bash Shell im Verzeichnis `/MyFS`, in das (über ein Docker-Volume) ihre Projektdateien gemappt werden. In diesem Verzeichnis können Sie beispielsweise den Code übersetzen, Programme ausführen, debuggen, usw.. 
+gestartet werden. Mit dem Container startet eine bash Shell im Verzeichnis `/MyFS`, in das (über ein Docker-Volume) ihre Projektdateien eingebunden werden. In diesem Verzeichnis können Sie beispielsweise den Code übersetzen, Programme ausführen, debuggen, usw.. 
 
 Dir Container wird beendet, wenn Sie in der Kommandozeile `exit` eingeben.
 
 ## Entwickeln mit einer CLion Remote Toolchain
 
-Die IDE Clion unterstütz die Entwicklung von Programmen auf entfernten (_remote_) Rechnern, also anderen Rechnern, als dem, auf dem die IDE selber ausgeführt wird. Dabei werden Übersetzen, Programmausführung und Debugging über eine _Remote Toolchain_ auf einem entfernten Rechner gestartet und die Ausgaben jeweils in der lokalen IDE angezeigt. Für den Entwickler fühlt es sich so an, als würde alles auf einem einzigen Rechner passieren.
+Kostenlose Lizenzen für die Nutzung von CLion (und anderen Jetbrains-Produkten) zu Ausbildungszwecken gibt es in [Ilias](https://ilias.hs-karlsruhe.de/goto.php?target=crs_99205&client_id=HSKA).
+
+Die IDE CLion unterstütz die Entwicklung von Programmen auf entfernten (_remote_) Rechnern, also anderen Rechnern, als dem, auf dem die IDE selber ausgeführt wird. Dabei werden Übersetzen, Programmausführung und Debugging über eine _Remote Toolchain_ auf einem entfernten Rechner gestartet und die Ausgaben jeweils in der lokalen IDE angezeigt. Für den Entwickler fühlt es sich so an, als würde alles auf einem einzigen Rechner passieren.
 
 Da der MyFS-Docker-Container nach außen wie ein eigener Rechner aussieht, bietet es sich an, diesen für die Remote-Entwicklung zu nutzen. Beispielsweise könnte man die CLion IDE auf seinem Windows-Rechner betreiben und mit der Remote Toolchain auf den MyFS-Container zugreifen. Dazu muss der MyFS-Container wie oben beschrieben gestartet werden.
 
-Unter CLion muss [wie hier beschrieben](https://www.jetbrains.com/help/clion/remote-projects-support.html) eine Remote Toolchain eingerichtet werden. Dafür benötigen Sie die folgenden Informationen:
+Unter CLion muss [wie hier beschrieben](https://www.jetbrains.com/help/CLion/remote-projects-support.html) eine Remote Toolchain eingerichtet werden. Dafür benötigen Sie die folgenden Informationen:
 
 * Host: `localhost`
 * Port: `22222`
