@@ -1,15 +1,48 @@
 #!/bin/bash
-SSH_PORT=22222 #you can connect via ssh onto this port
-#note that the host directory path when using docker-toolbox has to start with "/c/Users/"
-HOST_DIR=$PWD"/.." #path (Linux format!) to host directory to be shared with container
-CONTAINER_DIR="/MyFS" #path (Linux format!) to the shared directory inside of the container
-CONTAINER_NAME="bslab-container" #name of the launched docker container
-IMAGE_NAME="iz-gitlab-01.hs-karlsruhe.de:4567/iwi-i/bslab" #name of the docker image to build and use
-# RUN_COMMANDS="cp -r /MyFS/* ${CONTAINER_DIR}; cd ${CONTAINER_DIR}; ls obj; make"
-RUN_COMMANDS="/usr/sbin/sshd; cd ${CONTAINER_DIR}; bash" #commands to run inside the container after starting the ssh daemon and before starting the interactive shell (bash)
 
+###
+#
+# This file is based on work by Henning Häcker
+# https://github.com/hacker-h/bsuebung-docker
+#
+###
+
+### begin of configuration ###
+
+# you can connect via ssh onto this port
+SSH_PORT=22222 
+
+# path (Linux format!) to host directory to be shared with container
+HOST_DIR=$PWD"/.." 
+
+# path (Linux format!) to the shared directory inside of the container
+CONTAINER_DIR="/MyFS" 
+
+# name of the launched docker container
+CONTAINER_NAME="bslab-container" 
+
+# name of the docker image to build and use
+IMAGE_NAME="iz-gitlab-01.hs-karlsruhe.de:4567/iwi-i/bslab" 
+
+# commands to run inside the container 
+RUN_COMMANDS="/usr/sbin/sshd; cd ${CONTAINER_DIR}; bash" 
+
+#
+CONTAINER_REGISTRY="iz-gitlab-01.hs-karlsruhe.de:4567"
+DT_USEER="gitlab+deploy-token-1"
+DT_PASSWD="vPMZ1WAoG1NjXGZP5xrb"
+
+### End of configuration ###
+
+# login to container registry
+echo "Login into container registry '${CONTAINER_REGISTRY}':"
+docker login -u ${DT_USEER} -p ${DT_PASSWD} ${CONTAINER_REGISTRY}
+
+# build docker imgage
 echo "Building Docker Image '${IMAGE_NAME}':"
 docker build -t "${IMAGE_NAME}" .
+
+# run container
 echo "
 Running the Docker Container '${CONTAINER_NAME}' with Options:
 Mounting ${HOST_DIR} to ${CONTAINER_DIR}
