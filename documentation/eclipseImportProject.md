@@ -4,7 +4,7 @@
 
 Sie sollten eine Eclipse-Version mit den _C/C++ Development Tools (CDT)_ verwenden, siehe z.B. [hier](https://www.eclipse.org/downloads/packages/release/luna/r/eclipse-ide-cc-developers).
 
-Im Pool können Sie die vorinstallierte Eclipse-Version _Eclipse JEE 4.6.2 (Neon)_ verwenden.
+Im Pool können Sie die vorinstallierte Eclipse-Version _Eclipse JEE 4.6.2 (Neon)_ verwenden, in der CDT bereits vorinstalliert ist.
 
 In einigen alten Eclipse-Versionen (z.B. Mars) werden teilweise Fehler im Code gekennzeichnet, die eigentlich keine sind, sondern aus Problemen mit dem Eclipse-Indexer resultieren. Diese können durch entsprechende [Konfiguration](./eclipseConfig.md) behoben werden.
 
