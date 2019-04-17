@@ -27,7 +27,7 @@ Um die im Projekt definierten Programme erstellen zu können, benötigen Sie Zug
 * Öffnen Sie die `C++`-Perspektive mit `Window - Perspektive - Open Perspektive - Other - C++`
 * Öffnen Sie die "Outline View" über `Window - Show View - Outline`. Es werden unter anderem die im Makefile definierten Ziele dargestellt, erkennbar durch die Zielscheiben-Symbole.
 * Klicken Sie mit der rechten Maustaste auf das Ziel `mkfs.myfs` und wählen Sie `Add build Target`. Bestätigen Sie im folgenden Dialog mit `OK`.
-* Verfahren Sie analog für die Ziele `mount.myfs`, `clean` und ggf. `all`.
+* Verfahren Sie analog für die Ziele `mount.myfs`, `unittest`, `clean` und ggf. `all`.
 * Wenn Sie nun auf die "Build Targets View" wechseln über `Window - Show View - Build Targets` sehen Sie die gerade erstellten Ziele. Ein Ziel lässt sich mit einem Doppelklick erstellen.
 * Nach dem Erstellen erscheint (wenn fehlerfrei übersetzt und gelinkt wird) ein Programm unter den Projektdateien im Verzeichnis `Binaries`. Dieses können Sie dann über einen Rechtsklick und `Run as - Local C++ Application` starten.
 
