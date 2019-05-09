@@ -7,7 +7,9 @@
 //
 
 #include <cstdlib>
+#include <string.h>
 
+#include "catch.hpp"
 #include "helper.hpp"
 
 void gen_random(char *s, const int len) {
@@ -21,4 +23,27 @@ void gen_random(char *s, const int len) {
     }
 }
 
-// TODO: Implement you helper funcitons here
+void bdWriteRead(BlockDevice *bd, int noBlocks) {
+    char* r= new char[BD_BLOCK_SIZE * noBlocks];
+    memset(r, 0, BD_BLOCK_SIZE * noBlocks);
+
+    char* w= new char[BD_BLOCK_SIZE * noBlocks];
+    gen_random(w, BD_BLOCK_SIZE * noBlocks);
+
+    // write all blocks
+    for(int b= 0; b < noBlocks; b++) {
+        REQUIRE(bd->write(b, w + b*BD_BLOCK_SIZE) == 0);
+    }
+
+    // read all blocks
+    for(int b= 0; b < noBlocks; b++) {
+        REQUIRE(bd->read(b, r + b*BD_BLOCK_SIZE) == 0);
+    }
+
+    REQUIRE(memcmp(w, r, BD_BLOCK_SIZE * noBlocks) == 0);
+
+    delete [] r;
+    delete [] w;
+}
+
+// TODO: Implement you helper functions here

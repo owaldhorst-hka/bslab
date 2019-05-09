@@ -9,6 +9,9 @@
 #ifndef helper_hpp
 #define helper_hpp
 
+#include "blockdevice.h"
+
 void gen_random(char *s, const int len);
+void bdWriteRead(BlockDevice *bd, int noBlocks= 1);
 
 #endif /* helper_hpp */

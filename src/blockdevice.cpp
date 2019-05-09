@@ -32,12 +32,22 @@ void BlockDevice::resize(u_int32_t blockSize) {
 }
 
 int BlockDevice::create(const char *path) {
-    
+
+    int ret= 0;
+
     // Open Container file
-    contFile = ::open(path, O_EXCL | O_RDWR | O_CREAT | O_TRUNC, 0666);
+    contFile = ::open(path, O_EXCL | O_RDWR | O_CREAT, 0666);
     if (contFile < 0) {
-        if (errno != EEXIST)
-            error("unable to create container file");
+        if (errno == EEXIST) {
+            // file already exists, we must open & truncate
+            LOG("WARNING: container file already exists, truncating")
+            contFile = ::open(path, O_EXCL | O_RDWR | O_TRUNC);
+        }
+
+        if(contFile < 0) {
+            LOG("unable to create container file");
+            ret= -errno;
+        }
     }
     
     this->size= 0;
@@ -46,66 +56,79 @@ int BlockDevice::create(const char *path) {
 }
 
 int BlockDevice::open(const char *path) {
-    
+
+    int ret= 0;
+
     // Open Container file
     contFile = ::open(path, O_EXCL | O_RDWR);
     if (contFile < 0) {
         if (errno == ENOENT)
-            error("container file does not exists");
+            LOG("ERROR: container file does not exists");
         else
-            error("unknown error");
+            LOGF("ERROR: unknown error %d", errno);
+
+        ret= -errno;
+
+    } else {
+
+        // read file stats
+        struct stat st;
+        if (fstat(contFile, &st) < 0) {
+            LOG("ERROR: fstat returned -1");
+            ret = -errno;
+        } else {
+
+            // get file size
+            if (st.st_size > INT32_MAX) {
+                error("file to large");
+                ret= -EFBIG;
+            } else
+                this->size = (uint32_t) st.st_size;
+        }
     }
-    
-    // read file stats
-    struct stat st;
-    if( fstat(contFile, &st) < 0 ) {
-        error("fstat returned -1");
-    }
-    
-    // get file size
-    if(st.st_size > INT32_MAX) {
-        error("file to large");
-    }
-    this->size= (uint32_t) st.st_size;
-    
-    return 0;
+
+    return ret;
 }
 
 
 int BlockDevice::close() {
+
+    int ret= 0;
+
+    if(::close(this->contFile) < 0)
+        ret= -errno;
     
-    ::close(this->contFile);
-    
-    return 0;
+    return ret;
 }
 
-// this method returns 0 if successful, -1 otherwise
+// this method returns 0 if successful, -errno otherwise
 int BlockDevice::read(u_int32_t blockNo, char *buffer) {
 #ifdef DEBUG
     fprintf(stderr, "BlockDevice: Reading block %d\n", blockNo);
 #endif
     off_t pos = (blockNo) * this->blockSize;
     if (lseek (this->contFile, pos, SEEK_SET) != pos)
-        return -1;
+        return -errno;
     
     int size = (this->blockSize);
     if (::read (this->contFile, buffer, size) != size)
-        return -1;
+        return -errno;
 
     return 0;
 }
 
+// this method returns 0 if successful, -errno otherwise
 int BlockDevice::write(u_int32_t blockNo, char *buffer) {
 #ifdef DEBUG
     fprintf(stderr, "BlockDevice: Writing block %d\n", blockNo);
 #endif
     off_t pos = (blockNo) * this->blockSize;
     if (lseek (this->contFile, pos, SEEK_SET) != pos)
-        return -1;
+        return -errno;
 
     int __size = (this->blockSize);
     if (::write (this->contFile, buffer, __size) != __size)
-        return -1;
+        return -errno;
 
     return 0;
 }
@@ -115,11 +138,11 @@ uint32_t BlockDevice::getSize() {
     // update size from file stats
     struct stat st;
     if( fstat(contFile, &st) < 0 ) {
-        error("fstat returned -1");
+        LOG("ERROR: fstat returned -1");
     }
     
-    if(st.st_size > INT32_MAX)
-        error("file to large");
+    if(st.st_size > UINT32_MAX)
+        LOG("ERROR: file to large");
     this->size= (uint32_t) st.st_size;
     
     return this->size;

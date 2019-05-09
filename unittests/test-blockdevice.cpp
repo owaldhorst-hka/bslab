@@ -18,50 +18,62 @@
 #define BD_PATH "/tmp/bd.bin"
 #define NUM_TESTBLOCKS 1024
 
-TEST_CASE( "Write/Read blocks", "[blockdevice]" ) {
+TEST_CASE( "BD_CREATE_WRITE_READ_NEW_FILE", "[blockdevice]" ) {
     
     remove(BD_PATH);
-    
+
     BlockDevice bd;
-    bd.create(BD_PATH);
-    
-    SECTION("writing single block") {
-        char* r= new char[BD_BLOCK_SIZE];
-        memset(r, 0, BD_BLOCK_SIZE);
-        
-        char* w= new char[BD_BLOCK_SIZE];
-        gen_random(w, BD_BLOCK_SIZE);
-        
-        bd.write(0, w);
-        bd.read(0, r);
-        
-        REQUIRE(memcmp(w, r, BD_BLOCK_SIZE) == 0);
+    REQUIRE(bd.create(BD_PATH) == 0);
 
-        delete [] r;
-        delete [] w;
+    SECTION("write single block") {
+        bdWriteRead(&bd);
     }
     
-    SECTION("writing multiple blocks") {
-        char* r= new char[BD_BLOCK_SIZE * NUM_TESTBLOCKS];
-        memset(r, 0, BD_BLOCK_SIZE * NUM_TESTBLOCKS);
-        
-        char* w= new char[BD_BLOCK_SIZE * NUM_TESTBLOCKS];
-        gen_random(w, BD_BLOCK_SIZE * NUM_TESTBLOCKS);
-        
-        // write all blocks
-        for(int b= 0; b < NUM_TESTBLOCKS; b++) {
-            bd.write(b, w + b*BD_BLOCK_SIZE);
-        }
-        
-        // read all blocks
-        for(int b= 0; b < NUM_TESTBLOCKS; b++) {
-            bd.read(b, r + b*BD_BLOCK_SIZE);
-        }
-
-        REQUIRE(memcmp(w, r, BD_BLOCK_SIZE * NUM_TESTBLOCKS) == 0);
+    SECTION("write multiple blocks") {
+        bdWriteRead(&bd, NUM_TESTBLOCKS);
     }
     
-    bd.close();
+    REQUIRE(bd.close() == 0);
     remove(BD_PATH);
     
+}
+
+TEST_CASE( "BD_CREATE_WRITE_READ_EXISTING_FILE", "[blockdevice]" ) {
+
+    // Write to new file
+
+    remove(BD_PATH);
+
+    BlockDevice bd;
+    REQUIRE(bd.create(BD_PATH) == 0);
+
+    bdWriteRead(&bd, NUM_TESTBLOCKS);
+
+    REQUIRE(bd.close() == 0);
+
+    // Open existing file
+
+    BlockDevice bd2;
+    REQUIRE(bd2.open(BD_PATH) == 0);
+
+    bdWriteRead(&bd2, NUM_TESTBLOCKS);
+
+    REQUIRE(bd2.close() == 0);
+
+    // Create on existing file
+    BlockDevice bd3;
+    REQUIRE(bd3.create(BD_PATH) == 0);
+
+    bdWriteRead(&bd3, NUM_TESTBLOCKS);
+
+    REQUIRE(bd3.close() == 0);
+
+}
+
+TEST_CASE( "BD_OPEN_NON-EXISTING_FILE", "[blockdevice]" ) {
+
+    remove(BD_PATH);
+
+    BlockDevice bd;
+    REQUIRE(bd.open(BD_PATH) < 0);
 }
