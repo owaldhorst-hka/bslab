@@ -45,7 +45,7 @@ int BlockDevice::create(const char *path) {
         }
 
         if(contFile < 0) {
-            LOG("unable to create container file");
+            LOG("ERROR: unable to create container file");
             ret= -errno;
         }
     }
@@ -80,7 +80,7 @@ int BlockDevice::open(const char *path) {
 
             // get file size
             if (st.st_size > INT32_MAX) {
-                error("file to large");
+                LOG("ERROR: file to large");
                 ret= -EFBIG;
             } else
                 this->size = (uint32_t) st.st_size;
