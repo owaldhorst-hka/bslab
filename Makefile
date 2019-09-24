@@ -21,12 +21,7 @@ LINKFLAGS = -g -Wall
 LIBS = `pkg-config fuse --libs`
 
 # all targets in project TODO: add new targets here (and add objects and link target)
-TARGETS = mount.myfs mkfs.myfs
-
-# object files for target mkfs.myfs TODO: add new object files here
-MKFS_MYFS_OBJS = $(OBJDIR)/blockdevice.o \
-	$(OBJDIR)/myfs.o \
-	$(OBJDIR)/mkfs.myfs.o
+TARGETS = mount.myfs
 
 # object files for target mount.myfs TODO: add new object files here
 MOUNT_MYFS_OBJS = $(OBJDIR)/blockdevice.o \
@@ -36,10 +31,6 @@ MOUNT_MYFS_OBJS = $(OBJDIR)/blockdevice.o \
 
 # build all targets
 all: $(TARGETS)
-
-# link target mkfs.myfs
-mkfs.myfs: obj $(MKFS_MYFS_OBJS)
-	g++ $(LINKFLAGS) -o $@ $(MKFS_MYFS_OBJS) $(LIBS)
 
 # link target mount.myfs
 mount.myfs: obj $(MOUNT_MYFS_OBJS)

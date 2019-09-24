@@ -168,7 +168,7 @@ int MyFS::fuseRead(const char *path, char *buf, size_t size, off_t offset, struc
     
     // TODO: Implement this!
 
-    LOGF( "--> Trying to read %s, %lu, %lu\n", path, offset, size );
+    LOGF( "--> Trying to read %s, %lu, %lu\n", path, (unsigned long) offset, size );
 
     char file54Text[] = "Hello World From File54!\n";
     char file349Text[] = "Hello World From File349!\n";

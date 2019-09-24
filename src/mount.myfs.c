@@ -12,14 +12,65 @@
 
 #include <fuse.h>
 #include <stdio.h>
+#include <stddef.h>
 
 #include "myfs-info.h"
 
+#define PACKAGE_VERSION "v0.1"
+
 struct fuse_operations myfs_oper;
+
+struct myfs_config {
+    char *containerFileName;
+    char *logFileName;
+};
+enum {
+    KEY_HELP,
+    KEY_VERSION,
+};
+
+#define MYFS_OPT(t, p, v) { t, offsetof(struct myfs_config, p), v }
+
+static struct fuse_opt myfs_opts[] = {
+        MYFS_OPT("-c %s",             containerFileName, 0),
+        MYFS_OPT("containerfile=%s",  containerFileName, 0),
+        MYFS_OPT("-l %s",             logFileName, 0),
+        MYFS_OPT("logfile=%s",        logFileName, 0),
+
+        FUSE_OPT_KEY("-V",             KEY_VERSION),
+        FUSE_OPT_KEY("--version",      KEY_VERSION),
+        FUSE_OPT_KEY("-h",             KEY_HELP),
+        FUSE_OPT_KEY("--help",         KEY_HELP),
+        FUSE_OPT_END
+};
+
+static int myfs_opt_proc(void *data, const char *arg, int key, struct fuse_args *outargs)
+{
+    switch (key) {
+        case KEY_HELP:
+            fuse_opt_add_arg(outargs, "-h");
+            fuse_main(outargs->argc, outargs->argv, &myfs_oper, NULL);
+            fprintf(stderr,
+                    "\n"
+                    "Myfs options:\n"
+                    "    -o containerfile=FILE\n"
+                    "    -c FILE            same as '-o containerfile=FILE'\n"
+                    "    -o logfile=FILE\n"
+                    "    -l FILE            same as '-o logfile=FILE'\n");
+            exit(1);
+
+        case KEY_VERSION:
+            fprintf(stderr, "MyFS version %s\n", PACKAGE_VERSION);
+            fuse_opt_add_arg(outargs, "--version");
+            fuse_main(outargs->argc, outargs->argv, &myfs_oper, NULL);
+            exit(0);
+    }
+    return 1;
+}
 
 int main(int argc, char *argv[]) {
     int fuse_stat;
-    
+
     myfs_oper.getattr = wrap_getattr;
     myfs_oper.readlink = wrap_readlink;
     myfs_oper.getdir = NULL;
@@ -50,70 +101,63 @@ int main(int argc, char *argv[]) {
     myfs_oper.releasedir = wrap_releasedir;
     myfs_oper.fsyncdir = wrap_fsyncdir;
     myfs_oper.init = wrap_init;
-    
+
+    char* containerFileName= NULL;
+    char* logFileName= NULL;
+
+    // parse arguments
+    struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
+    struct myfs_config conf;
+
+    memset(&conf, 0, sizeof(conf));
+
+    fuse_opt_parse(&args, &conf, myfs_opts, myfs_opt_proc);
+
     // FsInfo will be used to pass information to fuse functions
     struct MyFsInfo *FsInfo;
     FsInfo= malloc(sizeof(struct MyFsInfo));
-    
-    char* containerFileName= NULL;
-    char* logFileName= NULL;
-    char* mountPointName= NULL;
-    
-    // parse arguments
-    if(argc > 3) {
-        // check if container file exists
-        containerFileName= realpath(argv[1], NULL);
-        if(containerFileName == NULL || access(containerFileName, R_OK & W_OK) == -1) {
-            fprintf(stderr, "Error: Cannot access container file %s\n", argv[1]);
+
+    // check if container file exists
+    if(conf.containerFileName != NULL) {
+        containerFileName = realpath(conf.containerFileName, NULL);
+        if (containerFileName == NULL || access(containerFileName, R_OK & W_OK) == -1) {
+            fprintf(stderr, "Error: Cannot access container file %s\n", conf.containerFileName);
             exit(EXIT_FAILURE);
         }
-        
-        // check if logfile can be accessed
-        FILE* logFile = fopen(argv[2], "w+");
-        
-        if(logFile == NULL || (logFileName= realpath(argv[2], NULL)) == NULL) {
-            fprintf(stderr, "Error: Cannot access log file %s\n", argv[2]);
+    }
+
+    // check if logfile can be accessed
+    if(conf.logFileName != NULL) {
+        FILE *logFile = fopen(conf.logFileName, "w+");
+
+        if (logFile == NULL || (logFileName = realpath(conf.logFileName, NULL)) == NULL) {
+            fprintf(stderr, "Error: Cannot access log file %s\n", conf.logFileName);
             exit(EXIT_FAILURE);
         }
-        
+
         fclose(logFile);
-        
-        // check if mountpoint exists
-        if((mountPointName= realpath(argv[3], NULL)) == NULL) {
-            fprintf(stderr, "Error: Cannot access mount point %s\n", argv[3]);
-            exit(EXIT_FAILURE);
-        }
-        
-        // everything ok, lets go
-        fprintf(stderr, "Containerfile= %s\n", containerFileName);
-        fprintf(stderr, "Logfile=       %s\n", logFileName);
-        fprintf(stderr, "Mountpoint=    %s\n", mountPointName);
-        
-        // container & log file name will be passed to fuse functions
-        FsInfo->contFile= containerFileName;
-        FsInfo->logFile= logFileName;
-        
-        // adjust arguments, add option "-s" for single threaded
-        argv+= 1; argc-= 1;
-        argv[1]= "-s";
+    } else {
+        fprintf(stderr, "Error: No log file given (use -l)\n");
+        exit(EXIT_FAILURE);
     }
-    else {
-        fprintf(stderr, "Usage: %s containerfile logfile mountpoint\n", argv[0]);
-        return (EXIT_FAILURE);
-    }
-    
+
+    // everything ok, lets go
+    // container & log file name will be passed to fuse functions
+    FsInfo->contFile= containerFileName;
+    FsInfo->logFile= logFileName;
+
+    // add additoinal "-s"
+    fuse_opt_add_arg(&args, "-s");
+
     // call fuse initialization method
-    fuse_stat = fuse_main(argc, argv, &myfs_oper, FsInfo);
-    
+    fuse_stat = fuse_main(args.argc, args.argv, &myfs_oper, FsInfo);
+
     fprintf(stderr, "fuse_main returned %d\n", fuse_stat);
-    
+
     // cleanup
     free(FsInfo);
     free(containerFileName);
     free(logFileName);
-    free(mountPointName);
-    
-    return EXIT_SUCCESS;
+
+    return fuse_stat;
 }
-
-

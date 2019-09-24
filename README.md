@@ -7,14 +7,13 @@ Wenn die notwendige Arbeitsumgebung eingerichtet wurde, sollte sich das Template
 	cd bslab
 	make
 	mkdir mount
-	touch container.bin
-	./mount.myfs container.bin log.txt mount
+	./mount.myfs mount -l log.txt
 	cd mount
 	ls
 	cat file349
 	cat file54
 	cd ..
-	fusermount -u mount
+	fusermount -u mount # oder für Mac OS-X: umount mount
 	
 
 Folgende Informationen können noch hilfreich sein:
