@@ -30,6 +30,7 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 #include "macros.h"
 #include "myfs.h"
@@ -74,19 +75,23 @@ int MyFS::fuseGetattr(const char *path, struct stat *statbuf) {
     statbuf->st_atime = time( NULL ); // The last "a"ccess of the file/directory is right now
     statbuf->st_mtime = time( NULL ); // The last "m"odification of the file/directory is right now
 
+    int ret= 0;
+
     if ( strcmp( path, "/" ) == 0 )
     {
         statbuf->st_mode = S_IFDIR | 0755;
         statbuf->st_nlink = 2; // Why "two" hardlinks instead of "one"? The answer is here: http://unix.stackexchange.com/a/101536
     }
-    else
+    else if ( strcmp( path, "/file54" ) == 0 || ( strcmp( path, "/file349" ) == 0 ) )
     {
         statbuf->st_mode = S_IFREG | 0644;
         statbuf->st_nlink = 1;
         statbuf->st_size = 1024;
     }
+    else
+        ret= -ENOENT;
 
-    RETURN(0);
+    RETURN(ret);
 }
 
 int MyFS::fuseReadlink(const char *path, char *link, size_t size) {
@@ -181,7 +186,7 @@ int MyFS::fuseRead(const char *path, char *buf, size_t size, off_t offset, struc
     else if ( strcmp( path, "/file349" ) == 0 )
         selectedText = file349Text;
     else
-        return -1;
+        return -ENOENT;
 
     // ... //
 
