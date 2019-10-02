@@ -52,7 +52,7 @@ int BlockDevice::create(const char *path) {
     
     this->size= 0;
     
-    return 0;
+    return ret;
 }
 
 int BlockDevice::open(const char *path) {

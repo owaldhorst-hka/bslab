@@ -37,7 +37,7 @@ Die IDE CLion unterstütz die Entwicklung von Programmen auf entfernten (_remote
 
 Da der MyFS-Docker-Container nach außen wie ein eigener Rechner aussieht, bietet es sich an, diesen für die Remote-Entwicklung zu nutzen. Beispielsweise könnte man die CLion IDE auf seinem Windows-Rechner betreiben und mit der Remote Toolchain auf den MyFS-Container zugreifen. Dazu muss der MyFS-Container wie oben beschrieben gestartet werden.
 
-Unter CLion muss [wie hier beschrieben](https://www.jetbrains.com/help/CLion/remote-projects-support.html) eine Remote Toolchain eingerichtet werden. Dafür benötigen Sie die folgenden Informationen:
+Unter CLion muss [wie hier beschrieben](https://www.jetbrains.com/help/clion/remote-projects-support.html) eine Remote Toolchain eingerichtet werden. Dafür benötigen Sie die folgenden Informationen:
 
 * Host: `localhost`
 * Port: `22222`
