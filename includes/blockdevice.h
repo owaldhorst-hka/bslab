@@ -23,7 +23,7 @@ private:
     uint32_t size;
     
 public:
-    BlockDevice(uint32_t blockSize = 512);
+    BlockDevice(uint32_t blockSize = BD_BLOCK_SIZE);
     void resize(uint32_t blockSize);
     int open(const char* path);
     int create(const char* path);

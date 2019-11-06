@@ -14,6 +14,7 @@
 struct MyFsInfo {
     char *logFile;
     char *contFile;
+    char inMemoryFs;
 };
 
 #endif /* myfs_info_h */

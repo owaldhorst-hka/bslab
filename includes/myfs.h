@@ -19,6 +19,9 @@ class MyFS {
 private:
     static MyFS *_instance;
     FILE *logFile;
+    bool inMemoryFs;
+
+    BlockDevice blockDevice;
     
 public:
     static MyFS *Instance();

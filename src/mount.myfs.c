@@ -116,14 +116,38 @@ int main(int argc, char *argv[]) {
     // FsInfo will be used to pass information to fuse functions
     struct MyFsInfo *FsInfo;
     FsInfo= malloc(sizeof(struct MyFsInfo));
+    FsInfo->inMemoryFs= 1;
 
-    // check if container file exists
+    // check if container file is accessible
     if(conf.containerFileName != NULL) {
-        containerFileName = realpath(conf.containerFileName, NULL);
-        if (containerFileName == NULL || access(containerFileName, R_OK & W_OK) == -1) {
-            fprintf(stderr, "Error: Cannot access container file %s\n", conf.containerFileName);
-            exit(EXIT_FAILURE);
+        containerFileName= realpath(conf.containerFileName, NULL);
+
+        if(containerFileName == NULL) {
+            // container file does not exist, check if path is writable
+            char *dirName= dirname(conf.containerFileName);
+            char *containerPathName= realpath(dirName, NULL);
+            free(dirName);
+            if (containerPathName == NULL || access(containerPathName, R_OK | W_OK) != 0 ) {
+                fprintf(stderr, "Error: Cannot access container directory %s\n", containerPathName == NULL ? "" : containerPathName);
+                exit(EXIT_FAILURE);
+            }
+            containerFileName= (char *) malloc(PATH_MAX);
+            char *containerBaseName= basename(conf.containerFileName);
+            strcpy(containerFileName, containerPathName);
+            strcat(containerFileName, "/");
+            strcat(containerFileName, containerBaseName);
+            free(containerBaseName);
+            free(containerPathName);
+        } else {
+            // container file does exit, check if it is writable
+            if (containerFileName == NULL || access(containerFileName, R_OK | W_OK) != 0 ) {
+                fprintf(stderr, "Error: Cannot access container file %s\n", containerFileName);
+                exit(EXIT_FAILURE);
+            }
         }
+
+        // container file is used, so we are not in memory!
+        FsInfo->inMemoryFs= 0;
     }
 
     // check if logfile can be accessed

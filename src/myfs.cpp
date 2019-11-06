@@ -35,6 +35,7 @@
 #include "macros.h"
 #include "myfs.h"
 #include "myfs-info.h"
+#include "blockdevice.h"
 
 MyFS* MyFS::_instance = NULL;
 
@@ -306,11 +307,41 @@ void* MyFS::fuseInit(struct fuse_conn_info *conn) {
         
         LOG("Starting logging...\n");
         LOGM();
-        
-        // you can get the containfer file name here:
-        LOGF("Container file name: %s", ((MyFsInfo *) fuse_get_context()->private_data)->contFile);
-        
-        // TODO: Implement your initialization methods here!
+
+        // Get in-memory flag
+        this->inMemoryFs= (((MyFsInfo *) fuse_get_context()->private_data)->inMemoryFs == 1);
+
+        if(this->inMemoryFs) {
+            LOG("Using in-memory mode");
+
+            // TODO: Move your in-memory initialization methods here!
+
+        } else {
+            LOGF("Container file name: %s", ((MyFsInfo *) fuse_get_context()->private_data)->contFile);
+
+            int ret= this->blockDevice.open(((MyFsInfo *) fuse_get_context()->private_data)->contFile);
+
+            if(ret >= 0) {
+                LOG("Container file does exist, reading");
+
+                // TODO: Read existing structures form file
+
+            } else if(ret == -ENOENT) {
+                LOG("Container file does not exist, creating new one");
+
+                ret = this->blockDevice.create(((MyFsInfo *) fuse_get_context()->private_data)->contFile);
+
+                if (ret >= 0) {
+
+                    // TODO: Create empty structures in file
+                    
+                }
+            }
+
+            if(ret < 0) {
+                LOGF("ERROR: Access to container file failed with error %d", ret);
+            }
+        }
     }
     
     RETURN(0);
