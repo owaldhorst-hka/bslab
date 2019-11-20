@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
             // container file does not exist, check if path is writable
             char *dirName= dirname(conf.containerFileName);
             char *containerPathName= realpath(dirName, NULL);
-            free(dirName);
+            // free(dirName);
             if (containerPathName == NULL || access(containerPathName, R_OK | W_OK) != 0 ) {
                 fprintf(stderr, "Error: Cannot access container directory %s\n", containerPathName == NULL ? "" : containerPathName);
                 exit(EXIT_FAILURE);
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
             strcpy(containerFileName, containerPathName);
             strcat(containerFileName, "/");
             strcat(containerFileName, containerBaseName);
-            free(containerBaseName);
+            // free(containerBaseName);
             free(containerPathName);
         } else {
             // container file does exit, check if it is writable
