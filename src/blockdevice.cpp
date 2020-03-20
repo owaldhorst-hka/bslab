@@ -26,11 +26,6 @@ BlockDevice::BlockDevice(uint32_t blockSize) {
     this->blockSize= blockSize;
 }
 
-void BlockDevice::resize(uint32_t blockSize) {
-    assert(blockSize % 512 == 0);
-    this->blockSize= blockSize;
-}
-
 int BlockDevice::create(const char *path) {
 
     int ret= 0;
@@ -50,7 +45,7 @@ int BlockDevice::create(const char *path) {
         }
     }
     
-    this->size= 0;
+//    this->size= 0;
     
     return ret;
 }
@@ -69,22 +64,6 @@ int BlockDevice::open(const char *path) {
 
         ret= -errno;
 
-    } else {
-
-        // read file stats
-        struct stat st;
-        if (fstat(contFile, &st) < 0) {
-            LOG("ERROR: fstat returned -1");
-            ret = -errno;
-        } else {
-
-            // get file size
-            if (st.st_size > INT32_MAX) {
-                LOG("ERROR: file to large");
-                ret= -EFBIG;
-            } else
-                this->size = (uint32_t) st.st_size;
-        }
     }
 
     return ret;
@@ -132,20 +111,4 @@ int BlockDevice::write(uint32_t blockNo, char *buffer) {
 
     return 0;
 }
-
-uint32_t BlockDevice::getSize() {
-    
-    // update size from file stats
-    struct stat st;
-    if( fstat(contFile, &st) < 0 ) {
-        LOG("ERROR: fstat returned -1");
-    }
-    
-    if(st.st_size > UINT32_MAX)
-        LOG("ERROR: file to large");
-    this->size= (uint32_t) st.st_size;
-    
-    return this->size;
-}
-
 

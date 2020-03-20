@@ -1,6 +1,6 @@
 //
 //  wrap.cpp
-//  myfs
+//  MyFS
 //
 //  Created by Oliver Waldhorst on 02.08.17.
 //  Copyright © 2017-2020 Oliver Waldhorst. All rights reserved.
@@ -10,6 +10,16 @@
 
 #include "wrap.h"
 #include "myfs.h"
+#include "myinmemoryfs.h"
+
+void setInstance(int onDisk) {
+    if(onDisk) {
+        fprintf(stderr, "ERROR: On disc FS not implemented.");
+        exit(-1);
+    } else {
+        MyInMemoryFS::SetInstance();
+    }
+}
 
 int wrap_getattr(const char *path, struct stat *statbuf) {
     return MyFS::Instance()->fuseGetattr(path, statbuf);

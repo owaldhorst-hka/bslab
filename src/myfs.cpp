@@ -9,21 +9,11 @@
 // The functions fuseGettattr(), fuseRead(), and fuseReadDir() are taken from
 // an example by Mohammed Q. Hussain. Here are original copyrights & licence:
 
-/**
- * Simple & Stupid Filesystem.
- *
- * Mohammed Q. Hussain - http://www.maastaar.net
- *
- * This is an example of using FUSE to build a simple filesystem. It is a part of a tutorial in MQH Blog with the title "Writing a Simple Filesystem Using FUSE in C": http://www.maastaar.net/fuse/linux/filesystem/c/2016/05/21/writing-a-simple-filesystem-using-fuse/
- *
- * License: GNU GPL
- */
-
 // For documentation of FUSE methods see https://libfuse.github.io/doxygen/structfuse__operations.html
 
 #undef DEBUG
 
-// TODO: Comment this to reduce debug messages
+// TODO: Comment lines to reduce debug messages
 #define DEBUG
 #define DEBUG_METHODS
 #define DEBUG_RETURN_VALUES
@@ -31,11 +21,16 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <cstdlib>
 
 #include "macros.h"
 #include "myfs.h"
 #include "myfs-info.h"
 #include "blockdevice.h"
+
+// TODO: [PART 2] You may move some helper messages here
+
+// DO NOT EDIT ANYTHING BELOW THIS LINE!!!
 
 MyFS::MyFS() {
     this->logFile= stderr;
@@ -45,60 +40,28 @@ MyFS::~MyFS() {
 
 }
 
+MyFS* MyFS::_instance = NULL;
+
+MyFS* MyFS::Instance() {
+    if(_instance == NULL) {
+        fprintf(stderr, "ERROR: MyFS Instance not set!");
+        exit(-1);
+    }
+    return _instance;
+}
+
 int MyFS::fuseGetattr(const char *path, struct stat *statbuf) {
     LOGM();
-
-    // TODO: Implement this!
-
-    LOGF( "\tAttributes of %s requested\n", path );
-
-    // GNU's definitions of the attributes (http://www.gnu.org/software/libc/manual/html_node/Attribute-Meanings.html):
-    // 		st_uid: 	The user ID of the file’s owner.
-    //		st_gid: 	The group ID of the file.
-    //		st_atime: 	This is the last access time for the file.
-    //		st_mtime: 	This is the time of the last modification to the contents of the file.
-    //		st_mode: 	Specifies the mode of the file. This includes file type information (see Testing File Type) and the file permission bits (see Permission Bits).
-    //		st_nlink: 	The number of hard links to the file. This count keeps track of how many directories have entries for this file. If the count is ever decremented to zero, then the file itself is discarded as soon
-    //						as no process still holds it open. Symbolic links are not counted in the total.
-    //		st_size:	This specifies the size of a regular file in bytes. For files that are really devices this field isn’t usually meaningful. For symbolic links this specifies the length of the file name the link refers to.
-
-    statbuf->st_uid = getuid(); // The owner of the file/directory is the user who mounted the filesystem
-    statbuf->st_gid = getgid(); // The group of the file/directory is the same as the group of the user who mounted the filesystem
-    statbuf->st_atime = time( NULL ); // The last "a"ccess of the file/directory is right now
-    statbuf->st_mtime = time( NULL ); // The last "m"odification of the file/directory is right now
-
-    int ret= 0;
-
-    if ( strcmp( path, "/" ) == 0 )
-    {
-        statbuf->st_mode = S_IFDIR | 0755;
-        statbuf->st_nlink = 2; // Why "two" hardlinks instead of "one"? The answer is here: http://unix.stackexchange.com/a/101536
-    }
-    else if ( strcmp( path, "/file54" ) == 0 || ( strcmp( path, "/file349" ) == 0 ) )
-    {
-        statbuf->st_mode = S_IFREG | 0644;
-        statbuf->st_nlink = 1;
-        statbuf->st_size = 1024;
-    }
-    else
-        ret= -ENOENT;
-
-    RETURN(ret);
+    RETURN(0);
 }
 
 int MyFS::fuseMknod(const char *path, mode_t mode, dev_t dev) {
     LOGM();
-
-    // TODO: Implement this!
-
     RETURN(0);
 }
 
 int MyFS::fuseUnlink(const char *path) {
     LOGM();
-
-    // TODO: Implement this!
-
     RETURN(0);
 }
 
@@ -124,140 +87,31 @@ int MyFS::fuseTruncate(const char *path, off_t newSize) {
 
 int MyFS::fuseOpen(const char *path, struct fuse_file_info *fileInfo) {
     LOGM();
-
-    // TODO: Implement this!
-
     RETURN(0);
 }
 
 int MyFS::fuseRead(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fileInfo) {
     LOGM();
-
-    // TODO: Implement this!
-
-    LOGF( "--> Trying to read %s, %lu, %lu\n", path, (unsigned long) offset, size );
-
-    char file54Text[] = "Hello World From File54!\n";
-    char file349Text[] = "Hello World From File349!\n";
-    char *selectedText = NULL;
-
-    // ... //
-
-    if ( strcmp( path, "/file54" ) == 0 )
-        selectedText = file54Text;
-    else if ( strcmp( path, "/file349" ) == 0 )
-        selectedText = file349Text;
-    else
-        return -ENOENT;
-
-    // ... //
-
-    memcpy( buf, selectedText + offset, size );
-
-    RETURN((int) (strlen( selectedText ) - offset));
+    RETURN(0);
 }
 
 int MyFS::fuseWrite(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fileInfo) {
     LOGM();
-
-    // TODO: Implement this!
-
     RETURN(0);
 }
 
 int MyFS::fuseRelease(const char *path, struct fuse_file_info *fileInfo) {
     LOGM();
-
-    // TODO: Implement this!
-
     RETURN(0);
 }
 
 int MyFS::fuseReaddir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fileInfo) {
     LOGM();
-
-    // TODO: Implement this!
-
-    LOGF( "--> Getting The List of Files of %s\n", path );
-
-    filler( buf, ".", NULL, 0 ); // Current Directory
-    filler( buf, "..", NULL, 0 ); // Parent Directory
-
-    if ( strcmp( path, "/" ) == 0 ) // If the user is trying to show the files/directories of the root directory show the following
-    {
-        filler( buf, "file54", NULL, 0 );
-        filler( buf, "file349", NULL, 0 );
-    }
-
     RETURN(0);
 }
 
 void* MyFS::fuseInit(struct fuse_conn_info *conn) {
-    // Open logfile
-    this->logFile= fopen(((MyFsInfo *) fuse_get_context()->private_data)->logFile, "w+");
-    if(this->logFile == NULL) {
-        fprintf(stderr, "ERROR: Cannot open logfile %s\n", ((MyFsInfo *) fuse_get_context()->private_data)->logFile);
-    } else {
-        //    this->logFile= ((MyFsInfo *) fuse_get_context()->private_data)->logFile;
-
-        // turn of logfile buffering
-        setvbuf(this->logFile, NULL, _IOLBF, 0);
-
-        LOG("Starting logging...\n");
-        LOGM();
-
-        // Get in-memory flag
-        this->inMemoryFs= (((MyFsInfo *) fuse_get_context()->private_data)->inMemoryFs == 1);
-
-        if(this->inMemoryFs) {
-            LOG("Using in-memory mode");
-
-            // TODO: [PART 1] Implement y
-
-        } else {
-            LOGF("Container file name: %s", ((MyFsInfo *) fuse_get_context()->private_data)->contFile);
-
-            int ret= this->blockDevice.open(((MyFsInfo *) fuse_get_context()->private_data)->contFile);
-
-            if(ret >= 0) {
-                LOG("Container file does exist, reading");
-
-                // TODO: Read existing structures form file
-
-            } else if(ret == -ENOENT) {
-                LOG("Container file does not exist, creating new one");
-
-                ret = this->blockDevice.create(((MyFsInfo *) fuse_get_context()->private_data)->contFile);
-
-                if (ret >= 0) {
-
-                    // TODO: Create empty structures in file
-
-                }
-            }
-
-            if(ret < 0) {
-                LOGF("ERROR: Access to container file failed with error %d", ret);
-            }
-        }
-    }
-
     RETURN(0);
-}
-
-// TODO: Add your own additional methods here!
-
-// ------------------------------------------------------------
-// ALL FUNCTIONS BELOW THIS LINE ARE OPTIONAL
-// ------------------------------------------------------------
-
-MyFS* MyFS::_instance = NULL;
-
-MyFS* MyFS::Instance() {
-    if(_instance == NULL) {
-        _instance = new MyFS();
-    }
-    return _instance;
 }
 
 int MyFS::fuseReadlink(const char *path, char *link, size_t size) {
@@ -270,7 +124,6 @@ int MyFS::fuseMkdir(const char *path, mode_t mode) {
     return 0;
 }
 
-
 int MyFS::fuseRmdir(const char *path) {
     LOGM();
     return 0;
@@ -280,7 +133,6 @@ int MyFS::fuseSymlink(const char *path, const char *link) {
     LOGM();
     return 0;
 }
-
 
 int MyFS::fuseLink(const char *path, const char *newpath) {
     LOGM();

@@ -16,21 +16,62 @@
 
 #define BD_BLOCK_SIZE 512
 
+/// @brief Emulate a block device
+///
+/// This class emulates access to a generic block device (e.g. a hard disc or USB drive partition) using the
+/// local file system.
 class BlockDevice {
 private:
     uint32_t blockSize;
     int contFile;
-    uint32_t size;
+    // uint32_t size;
     
 public:
-    BlockDevice(uint32_t blockSize = BD_BLOCK_SIZE);
-    void resize(uint32_t blockSize);
+    /// @brief Create a new block device.
+    ///
+    /// Create a block device object with a given block size.
+    /// \param blockSize Block size.
+    BlockDevice(uint32_t blockSize);
+
+    /// @brief Open an existing container file.
+    ///
+    /// This methods opens an existing container file and attaches it to the block device object.
+    /// \param path Path of the container file.
+    /// \return 0 on success, -ERRNO on failure.
     int open(const char* path);
+
+    /// @brief Create a new container file.
+    ///
+    /// This methods creates a new container file and attaches it to the block device object. If the container file
+    /// already exists, the content is erased.
+    ///
+    /// \param path Path of the container file.
+    /// \return 0 on success, -ERRNO on failure.
     int create(const char* path);
+
+    /// @brief Close a container file.
+    ///
+    /// This method closes a container file.
+    /// \return 0 on success, -ERRNO on failure.
     int close();
+
+    /// @brief Read a block.
+    ///
+    /// This method reads the block with the number blockNo from the container file. The content of the block is
+    /// stored in the buffer. Note that the size of the buffer must be at least one block.
+    /// \param [in] blockNo Number of the block to read.
+    /// \param [out] buffer Buffer for storing the content of the block.
+    /// \return 0 on success, -ERRNO on failure.
     int read(uint32_t blockNo, char *buffer);
+
+    /// @brief Write a block
+    ///
+    /// This method write the block with the number blockNo into the container file. The content of the block is
+    /// given by the buffer. Note that the size of the buffer must be at least one block.
+    /// \param [in] blockNo Number of the block to write.
+    /// \param [out] buffer Buffer storing the content to write.
+    /// \return 0 on success, -ERRNO on failure.
     int write(uint32_t blockNo, char *buffer);
-    uint32_t getSize();
 };
 
 #endif /* blockdevice_h */

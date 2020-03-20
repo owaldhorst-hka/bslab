@@ -26,7 +26,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+    void setInstance(int onDisk);
+
     int wrap_getattr(const char *path, struct stat *statbuf);
     int wrap_readlink(const char *path, char *link, size_t size);
     int wrap_mknod(const char *path, mode_t mode, dev_t dev);

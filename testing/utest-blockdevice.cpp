@@ -17,12 +17,13 @@
 
 #define BD_PATH "/tmp/bd.bin"
 #define NUM_TESTBLOCKS 1024
+#define BLOCK_SIZE 512
 
 TEST_CASE( "BD_CREATE_WRITE_READ_NEW_FILE", "[blockdevice]" ) {
     
     remove(BD_PATH);
 
-    BlockDevice bd;
+    BlockDevice bd(BLOCK_SIZE);
     REQUIRE(bd.create(BD_PATH) == 0);
 
     SECTION("write single block") {
@@ -44,7 +45,7 @@ TEST_CASE( "BD_CREATE_WRITE_READ_EXISTING_FILE", "[blockdevice]" ) {
 
     remove(BD_PATH);
 
-    BlockDevice bd;
+    BlockDevice bd(BLOCK_SIZE);
     REQUIRE(bd.create(BD_PATH) == 0);
 
     bdWriteRead(&bd, NUM_TESTBLOCKS);
@@ -53,7 +54,7 @@ TEST_CASE( "BD_CREATE_WRITE_READ_EXISTING_FILE", "[blockdevice]" ) {
 
     // Open existing file
 
-    BlockDevice bd2;
+    BlockDevice bd2(BLOCK_SIZE);
     REQUIRE(bd2.open(BD_PATH) == 0);
 
     bdWriteRead(&bd2, NUM_TESTBLOCKS);
@@ -61,7 +62,7 @@ TEST_CASE( "BD_CREATE_WRITE_READ_EXISTING_FILE", "[blockdevice]" ) {
     REQUIRE(bd2.close() == 0);
 
     // Create on existing file
-    BlockDevice bd3;
+    BlockDevice bd3(BLOCK_SIZE);
     REQUIRE(bd3.create(BD_PATH) == 0);
 
     bdWriteRead(&bd3, NUM_TESTBLOCKS);
@@ -74,6 +75,6 @@ TEST_CASE( "BD_OPEN_NON-EXISTING_FILE", "[blockdevice]" ) {
 
     remove(BD_PATH);
 
-    BlockDevice bd;
+    BlockDevice bd(BLOCK_SIZE);
     REQUIRE(bd.open(BD_PATH) < 0);
 }

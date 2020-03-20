@@ -117,8 +117,6 @@ int main(int argc, char *argv[]) {
     // FsInfo will be used to pass information to fuse functions
     struct MyFsInfo *FsInfo;
     FsInfo= malloc(sizeof(struct MyFsInfo));
-    FsInfo->inMemoryFs= 1;
-
     // check if container file is accessible
     if(conf.containerFileName != NULL) {
         containerFileName= realpath(conf.containerFileName, NULL);
@@ -149,6 +147,10 @@ int main(int argc, char *argv[]) {
 
         // container file is used, so we are not in memory!
         FsInfo->inMemoryFs= 0;
+        setInstance(1);
+    } else {
+        FsInfo->inMemoryFs= 1;
+        setInstance(0);
     }
 
     // check if logfile can be accessed
