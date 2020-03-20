@@ -3,28 +3,23 @@
 // Copyright © 2017-2020 Oliver Waldhorst. All rights reserved.
 //
 
-#ifndef MYFS_MYINMEMORYFS_H
-#define MYFS_MYINMEMORYFS_H
-
-#include <fuse.h>
-#include <cmath>
+#ifndef MYFS_MYONDISKFS_H
+#define MYFS_MYONDISKFS_H
 
 #include "myfs.h"
-#include "blockdevice.h"
-#include "myfs-structs.h"
 
-/// @brief In-memory implementation of a simple file system.
-class MyInMemoryFS : public MyFS {
+/// @brief On-disk implementation of a simple file system.
+class MyOnDiskFS : public MyFS {
 protected:
     // BlockDevice blockDevice;
 
 public:
-    static MyInMemoryFS *Instance();
+    static MyOnDiskFS *Instance();
 
     // TODO: [PART 1] Add attributes of your file system here
 
-    MyInMemoryFS();
-    ~MyInMemoryFS();
+    MyOnDiskFS();
+    ~MyOnDiskFS();
 
     static void SetInstance();
 
@@ -50,4 +45,4 @@ public:
 
 };
 
-#endif //MYFS_MYINMEMORYFS_H
+#endif //MYFS_MYONDISKFS_H

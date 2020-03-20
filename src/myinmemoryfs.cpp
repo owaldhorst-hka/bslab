@@ -13,7 +13,9 @@
  *
  * Mohammed Q. Hussain - http://www.maastaar.net
  *
- * This is an example of using FUSE to build a simple filesystem. It is a part of a tutorial in MQH Blog with the title "Writing a Simple Filesystem Using FUSE in C": http://www.maastaar.net/fuse/linux/filesystem/c/2016/05/21/writing-a-simple-filesystem-using-fuse/
+ * This is an example of using FUSE to build a simple filesystem. It is a part of a tutorial in MQH Blog with the title
+ * "Writing a Simple Filesystem Using FUSE in C":
+ * http://www.maastaar.net/fuse/linux/filesystem/c/2016/05/21/writing-a-simple-filesystem-using-fuse/
  *
  * License: GNU GPL
  */
@@ -114,10 +116,15 @@ int MyInMemoryFS::fuseGetattr(const char *path, struct stat *statbuf) {
     //		st_gid: 	The group ID of the file.
     //		st_atime: 	This is the last access time for the file.
     //		st_mtime: 	This is the time of the last modification to the contents of the file.
-    //		st_mode: 	Specifies the mode of the file. This includes file type information (see Testing File Type) and the file permission bits (see Permission Bits).
-    //		st_nlink: 	The number of hard links to the file. This count keeps track of how many directories have entries for this file. If the count is ever decremented to zero, then the file itself is discarded as soon
-    //						as no process still holds it open. Symbolic links are not counted in the total.
-    //		st_size:	This specifies the size of a regular file in bytes. For files that are really devices this field isn’t usually meaningful. For symbolic links this specifies the length of the file name the link refers to.
+    //		st_mode: 	Specifies the mode of the file. This includes file type information (see Testing File Type) and
+    //		            the file permission bits (see Permission Bits).
+    //		st_nlink: 	The number of hard links to the file. This count keeps track of how many directories have
+    //	             	entries for this file. If the count is ever decremented to zero, then the file itself is
+    //	             	discarded as soon as no process still holds it open. Symbolic links are not counted in the
+    //	             	total.
+    //		st_size:	This specifies the size of a regular file in bytes. For files that are really devices this field
+    //		            isn’t usually meaningful. For symbolic links this specifies the length of the file name the link
+    //		            refers to.
 
     statbuf->st_uid = getuid(); // The owner of the file/directory is the user who mounted the filesystem
     statbuf->st_gid = getgid(); // The group of the file/directory is the same as the group of the user who mounted the filesystem
@@ -332,7 +339,6 @@ void* MyInMemoryFS::fuseInit(struct fuse_conn_info *conn) {
         setvbuf(this->logFile, NULL, _IOLBF, 0);
 
         LOG("Starting logging...\n");
-        LOGM();
 
         LOG("Using in-memory mode");
 

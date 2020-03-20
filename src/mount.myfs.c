@@ -146,10 +146,8 @@ int main(int argc, char *argv[]) {
         }
 
         // container file is used, so we are not in memory!
-        FsInfo->inMemoryFs= 0;
         setInstance(1);
     } else {
-        FsInfo->inMemoryFs= 1;
         setInstance(0);
     }
 

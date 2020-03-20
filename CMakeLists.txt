@@ -13,7 +13,7 @@ set(MOUNT
         src/myfs.cpp
         src/wrap.cpp
         src/mount.myfs.c
-        src/myinmemoryfs.cpp)
+        src/myinmemoryfs.cpp src/myondiskfs.cpp includes/myondiskfs.h)
 
 set(UNITTESTS
         src/blockdevice.cpp
@@ -21,7 +21,7 @@ set(UNITTESTS
         testing/main.cpp
         testing/utest-blockdevice.cpp
         testing/utest-myfs.cpp
-        testing/helper.cpp src/myinmemoryfs.cpp includes/myinmemoryfs.h)
+        testing/helper.cpp src/myinmemoryfs.cpp includes/myinmemoryfs.h src/myondiskfs.cpp includes/myondiskfs.h)
 
 include_directories(includes)
 
@@ -29,8 +29,8 @@ set(COMPILE_FLAGS "-Wall -DFUSE_USE_VERSION=26")
 
 add_definitions(${COMPILE_FLAGS})
 
-add_executable(mount.myfs ${MOUNT} src/myinmemoryfs.cpp includes/myinmemoryfs.h)
-add_executable(unittests ${UNITTESTS} src/myinmemoryfs.cpp includes/myinmemoryfs.h)
+add_executable(mount.myfs ${MOUNT} src/myinmemoryfs.cpp includes/myinmemoryfs.h src/myondiskfs.cpp includes/myondiskfs.h)
+add_executable(unittests ${UNITTESTS} src/myinmemoryfs.cpp includes/myinmemoryfs.h src/myondiskfs.cpp includes/myondiskfs.h)
 
 find_package(PkgConfig)
 pkg_check_modules(FUSE fuse)

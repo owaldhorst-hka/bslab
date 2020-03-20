@@ -11,11 +11,11 @@
 #include "wrap.h"
 #include "myfs.h"
 #include "myinmemoryfs.h"
+#include "myondiskfs.h"
 
 void setInstance(int onDisk) {
     if(onDisk) {
-        fprintf(stderr, "ERROR: On disc FS not implemented.");
-        exit(-1);
+        MyOnDiskFS::SetInstance();
     } else {
         MyInMemoryFS::SetInstance();
     }
