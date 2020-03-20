@@ -3,7 +3,7 @@
 //  myfs
 //
 //  Created by Oliver Waldhorst on 02.08.17.
-//  Copyright © 2017 Oliver Waldhorst. All rights reserved.
+//  Copyright © 2017-2020 Oliver Waldhorst. All rights reserved.
 //
 
 #ifndef wrap_h
@@ -61,6 +61,7 @@ extern "C" {
     int wrap_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fileInfo);
     int wrap_releasedir(const char *path, struct fuse_file_info *fileInfo);
     int wrap_fsyncdir(const char *path, int datasync, struct fuse_file_info *fileInfo);
+    int wrap_ftruncate(const char *path, off_t offset, struct fuse_file_info *fileInfo);
     int wrap_create(const char *, mode_t, struct fuse_file_info *);
     void wrap_destroy(void *userdata);
     
