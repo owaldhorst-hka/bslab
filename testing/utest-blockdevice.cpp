@@ -11,13 +11,16 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "helper.hpp"
+#include "tools.hpp"
 
 #include "blockdevice.h"
 
 #define BD_PATH "/tmp/bd.bin"
 #define NUM_TESTBLOCKS 1024
 #define BLOCK_SIZE 512
+
+// Declarations of helper functions
+void bdWriteRead(BlockDevice *bd, int noBlocks= 1);
 
 TEST_CASE( "BD_CREATE_WRITE_READ_NEW_FILE", "[blockdevice]" ) {
     
@@ -77,4 +80,31 @@ TEST_CASE( "BD_OPEN_NON-EXISTING_FILE", "[blockdevice]" ) {
 
     BlockDevice bd(BLOCK_SIZE);
     REQUIRE(bd.open(BD_PATH) < 0);
+}
+
+// ***
+// *** Helper functions
+// ***
+
+void bdWriteRead(BlockDevice *bd, int noBlocks) {
+    char* r= new char[BD_BLOCK_SIZE * noBlocks];
+    memset(r, 0, BD_BLOCK_SIZE * noBlocks);
+
+    char* w= new char[BD_BLOCK_SIZE * noBlocks];
+    gen_random(w, BD_BLOCK_SIZE * noBlocks);
+
+    // write all blocks
+    for(int b= 0; b < noBlocks; b++) {
+        REQUIRE(bd->write(b, w + b*BD_BLOCK_SIZE) == 0);
+    }
+
+    // read all blocks
+    for(int b= 0; b < noBlocks; b++) {
+        REQUIRE(bd->read(b, r + b*BD_BLOCK_SIZE) == 0);
+    }
+
+    REQUIRE(memcmp(w, r, BD_BLOCK_SIZE * noBlocks) == 0);
+
+    delete [] r;
+    delete [] w;
 }
