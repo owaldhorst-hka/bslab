@@ -6,6 +6,8 @@
 //  Copyright © 2017-2020 Oliver Waldhorst. All rights reserved.
 //
 
+// This file is based on an example from https://code.google.com/archive/p/fuse-examplefs/
+
 #ifndef wrap_h
 #define wrap_h
 

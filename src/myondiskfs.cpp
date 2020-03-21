@@ -84,7 +84,7 @@ int MyOnDiskFS::fuseRename(const char *path, const char *newpath) {
 
     // TODO: [PART 2] Implement this!
 
-    return 0;
+    RETURN(0);
 }
 
 /// @brief Get file meta data.
@@ -209,7 +209,7 @@ int MyOnDiskFS::fuseTruncate(const char *path, off_t newSize) {
 
     // TODO: [PART 2] Implement this!
 
-    return 0;
+    RETURN(0);
 }
 
 /// @brief Truncate a file.
@@ -218,9 +218,10 @@ int MyOnDiskFS::fuseTruncate(const char *path, off_t newSize) {
 /// the new size is larger than the old size, the new bytes may be random. This function is called for files that are
 /// open.
 /// \param [in] path Name of the file, starting with "/".
+/// \param [in] newSize New size of the file.
 /// \param [in] fileInfo File handel for the file set by fuseOpen.
 /// \return 0 on success, -ERRNO on failure.
-int MyOnDiskFS::fuseTruncate(const char *path, off_t offset, struct fuse_file_info *fileInfo) {
+int MyOnDiskFS::fuseTruncate(const char *path, off_t newSize, struct fuse_file_info *fileInfo) {
     LOGM();
 
     // TODO: [PART 2] Implement this!
@@ -289,7 +290,7 @@ void* MyOnDiskFS::fuseInit(struct fuse_conn_info *conn) {
         }
      }
 
-    RETURN(0);
+    return 0;
 }
 
 /// @brief Clean up a file system.
