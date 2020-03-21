@@ -1,13 +1,19 @@
 # Labor Betriebssysteme
 
-Dies ist das Template für die Aufgaben zum Labor Betriebsysteme. Details zur Aufgabenstellung finden Sie im ILIAS-Kurs zum Labor.
+Dies ist das Template für die Aufgaben zum Labor Betriebsysteme. Details zur Aufgabenstellung finden Sie im ILIAS-Kurs 
+zum Labor.
 
-Wenn die notwendige Arbeitsumgebung eingerichtet wurde, sollte sich das Template-Projekt korrekt übersetzen lassen und dann die Funktionalität des [_Simple & Stupid File Systems_](http://www.maastaar.net/fuse/linux/filesystem/c/2016/05/21/writing-a-simple-filesystem-using-fuse/) bereitstellen. Das lässt sich mit den folgenden Kommandos ausprobieren:
+Wenn die notwendige Arbeitsumgebung eingerichtet wurde, sollte sich das Template-Projekt korrekt übersetzen lassen und 
+dann die Funktionalität des 
+[_Simple & Stupid File Systems_](http://www.maastaar.net/fuse/linux/filesystem/c/2016/05/21/writing-a-simple-filesystem-using-fuse/) 
+bereitstellen. Das lässt sich mit den folgenden Kommandos ausprobieren (dabei 
+`<pfad-zum-dateisystem>` durch das Verzeichnis mit dem Template ersetzen):
 
-	cd bslab
-	make
+	mkdir build
+	cd build
+	cmake <pfad-zum-template> && make
 	mkdir mount
-	./mount.myfs mount -l log.txt
+	bin/mount.myfs mount -l log.txt
 	cd mount
 	ls
 	cat file349
