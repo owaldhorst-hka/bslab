@@ -59,6 +59,7 @@ MyInMemoryFS::~MyInMemoryFS() {
 /// @brief Create a new file.
 ///
 /// Create a new file with given name and permissions.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] mode Permissions for file access.
 /// \param [in] dev Can be ignored.
@@ -74,6 +75,7 @@ int MyInMemoryFS::fuseMknod(const char *path, mode_t mode, dev_t dev) {
 /// @brief Delete a file.
 ///
 /// Delete a file with given name from the file system.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \return 0 on success, -ERRNO on failure.
 int MyInMemoryFS::fuseUnlink(const char *path) {
@@ -87,6 +89,7 @@ int MyInMemoryFS::fuseUnlink(const char *path) {
 /// @brief Rename a file.
 ///
 /// Rename the file with with a given name to a new name.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] newpath  New name of the file, starting with "/".
 /// \return 0 on success, -ERRNO on failure.
@@ -153,6 +156,7 @@ int MyInMemoryFS::fuseGetattr(const char *path, struct stat *statbuf) {
 /// @brief Change file permissions.
 ///
 /// Set new permissions for a file.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] mode New mode of the file.
 /// \return 0 on success, -ERRNO on failure.
@@ -164,9 +168,10 @@ int MyInMemoryFS::fuseChmod(const char *path, mode_t mode) {
     RETURN(0);
 }
 
-/// @brief Set the owner of a file.
+/// @brief Change the owner of a file.
 ///
 /// Change the user and group identifier in the meta data of a file.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] uid New user id.
 /// \param [in] gid New group id.
@@ -183,6 +188,7 @@ int MyInMemoryFS::fuseChown(const char *path, uid_t uid, gid_t gid) {
 ///
 /// Open a file for reading or writing. This includes checking the permissions of the current user and incrementing the
 /// open file count.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [out] fileInfo Can be ignored in Part 1
 /// \return 0 on success, -ERRNO on failure.
@@ -197,6 +203,11 @@ int MyInMemoryFS::fuseOpen(const char *path, struct fuse_file_info *fileInfo) {
 /// @brief Read from a file.
 ///
 /// Read a given number of bytes from a file starting form a given position.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
+/// Note that the file content is an array of bytes, not a string. I.e., it is not (!) necessarily terminated by '\0'
+/// and may contain an arbitrary number of '\0'at any position. Thus, you should not use strlen(), strcpy(), strcmp(),
+/// ... on both the file content and buf, but explicitly store the length of the file and all buffers somewhere and use
+/// memcpy(), memcmp(), ... to process the content.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [out] buf The data read from the file is stored in this array. You can assume that the size of buffer is at
 /// least 'size'
@@ -236,6 +247,11 @@ int MyInMemoryFS::fuseRead(const char *path, char *buf, size_t size, off_t offse
 /// @brief Write to a file.
 ///
 /// Write a given number of bytes to a file starting at a given position.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
+/// Note that the file content is an array of bytes, not a string. I.e., it is not (!) necessarily terminated by '\0'
+/// and may contain an arbitrary number of '\0'at any position. Thus, you should not use strlen(), strcpy(), strcmp(),
+/// ... on both the file content and buf, but explicitly store the length of the file and all buffers somewhere and use
+/// memcpy(), memcmp(), ... to process the content.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] buf An array containing the bytes that should be written.
 /// \param [in] size Number of bytes to write.
@@ -269,6 +285,7 @@ int MyInMemoryFS::fuseRelease(const char *path, struct fuse_file_info *fileInfo)
 ///
 /// Set the size of a file to the new size. If the new size is smaller than the old size, spare bytes are removed. If
 /// the new size is larger than the old size, the new bytes may be random.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] newSize New size of the file.
 /// \return 0 on success, -ERRNO on failure.
@@ -285,6 +302,7 @@ int MyInMemoryFS::fuseTruncate(const char *path, off_t newSize) {
 /// Set the size of a file to the new size. If the new size is smaller than the old size, spare bytes are removed. If
 /// the new size is larger than the old size, the new bytes may be random. This function is called for files that are
 /// open.
+/// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] newSize New size of the file.
 /// \param [in] fileInfo Can be ignored in Part 1.
@@ -300,6 +318,7 @@ int MyInMemoryFS::fuseTruncate(const char *path, off_t newSize, struct fuse_file
 /// @brief Read a directory.
 ///
 /// Read the content of the (only) directory.
+/// You do not have to check file permissions, but can assume that it is always ok to access the directory.
 /// \param [in] path Path of the directory. Should be "/" in our case.
 /// \param [out] buf A buffer for storing the directory entries.
 /// \param [in] filler A function for putting entries into the buffer.
