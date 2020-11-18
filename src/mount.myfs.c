@@ -123,7 +123,9 @@ int main(int argc, char *argv[]) {
 
         if(containerFileName == NULL) {
             // container file does not exist, check if path is writable
-            char *dirName= dirname(conf.containerFileName);
+            char *containerFileNameCpy= malloc(strlen(conf.containerFileName)+1);
+            strcpy(containerFileNameCpy, conf.containerFileName);
+            char *dirName= dirname(containerFileNameCpy);
             char *containerPathName= realpath(dirName, NULL);
             // free(dirName);
             if (containerPathName == NULL || access(containerPathName, R_OK | W_OK) != 0 ) {
@@ -131,12 +133,14 @@ int main(int argc, char *argv[]) {
                 exit(EXIT_FAILURE);
             }
             containerFileName= (char *) malloc(PATH_MAX);
-            char *containerBaseName= basename(conf.containerFileName);
+            strcpy(containerFileNameCpy, conf.containerFileName);
+            char *containerBaseName= basename(containerFileNameCpy);
             strcpy(containerFileName, containerPathName);
             strcat(containerFileName, "/");
             strcat(containerFileName, containerBaseName);
             // free(containerBaseName);
             free(containerPathName);
+            free(containerFileNameCpy);
         } else {
             // container file does exit, check if it is writable
             if (containerFileName == NULL || access(containerFileName, R_OK | W_OK) != 0 ) {
