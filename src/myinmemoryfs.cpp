@@ -89,6 +89,8 @@ int MyInMemoryFS::fuseUnlink(const char *path) {
 /// @brief Rename a file.
 ///
 /// Rename the file with with a given name to a new name.
+/// Note that if a file with the new name already exists it is replaced (i.e., removed
+/// before renaming the file.
 /// You do not have to check file permissions, but can assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [in] newpath  New name of the file, starting with "/".
