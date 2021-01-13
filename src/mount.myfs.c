@@ -102,6 +102,7 @@ int main(int argc, char *argv[]) {
     myfs_oper.fsyncdir = wrap_fsyncdir;
     myfs_oper.init = wrap_init;
     myfs_oper.ftruncate = wrap_ftruncate;
+    myfs_oper.destroy = wrap_destroy;
 
     char* containerFileName= NULL;
     char* logFileName= NULL;

@@ -28,7 +28,7 @@ public:
     // TODO: [PART 2] You may add attributes of your file system here
     
     MyFS();
-    ~MyFS();
+    virtual ~MyFS();
     
     // --- Methods called by FUSE ---
     // For Documentation see https://libfuse.github.io/doxygen/structfuse__operations.html
