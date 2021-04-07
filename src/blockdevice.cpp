@@ -85,7 +85,7 @@ int BlockDevice::read(uint32_t blockNo, char *buffer) {
 #ifdef DEBUG
     fprintf(stderr, "BlockDevice: Reading block %d\n", blockNo);
 #endif
-    off_t pos = (blockNo) * this->blockSize;
+    off_t pos = (off_t) blockNo * this->blockSize;
     if (lseek (this->contFile, pos, SEEK_SET) != pos)
         return -errno;
     
@@ -101,7 +101,7 @@ int BlockDevice::write(uint32_t blockNo, char *buffer) {
 #ifdef DEBUG
     fprintf(stderr, "BlockDevice: Writing block %d\n", blockNo);
 #endif
-    off_t pos = (blockNo) * this->blockSize;
+    off_t pos = (off_t) blockNo * this->blockSize;
     if (lseek (this->contFile, pos, SEEK_SET) != pos)
         return -errno;
 
