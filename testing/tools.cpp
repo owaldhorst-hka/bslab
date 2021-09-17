@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <string.h>
 
-#include <catch2/catch.hpp>
+#include "../catch/catch.hpp"
 
 #include "tools.hpp"
 

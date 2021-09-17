@@ -6,7 +6,7 @@
 //  Copyright © 2017 Oliver Waldhorst. All rights reserved.
 //
 
-#include <catch2/catch.hpp>
+#include "../catch/catch.hpp"
 
 #include <stdio.h>
 #include <string.h>
