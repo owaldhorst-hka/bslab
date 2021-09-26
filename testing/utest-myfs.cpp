@@ -6,8 +6,7 @@
 //  Copyright © 2017 Oliver Waldhorst. All rights reserved.
 //
 
-#include "catch.hpp"
-
+#include "../catch/catch.hpp"
 
 #include "tools.hpp"
 #include "myfs.h"

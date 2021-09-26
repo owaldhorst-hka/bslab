@@ -40,14 +40,18 @@ add_executable(integrationtests
 find_package(PkgConfig)
 pkg_check_modules(FUSE fuse)
 
+set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR/catch})
+add_library(Catch INTERFACE)
+target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+
 target_link_libraries(mount.myfs ${FUSE_LDFLAGS})
 target_compile_options(mount.myfs PUBLIC ${FUSE_CFLAGS})
 target_include_directories(mount.myfs PUBLIC ${FUSE_INCLUDE_DIRS})
 
-target_link_libraries(unittests ${FUSE_LDFLAGS})
+target_link_libraries(unittests PRIVATE Catch ${FUSE_LDFLAGS})
 target_compile_options(unittests PUBLIC ${FUSE_CFLAGS})
 target_include_directories(unittests PUBLIC ${FUSE_INCLUDE_DIRS})
 
-target_link_libraries(integrationtests ${FUSE_LDFLAGS})
+target_link_libraries(integrationtests PRIVATE Catch ${FUSE_LDFLAGS})
 target_compile_options(integrationtests PUBLIC ${FUSE_CFLAGS})
 target_include_directories(integrationtests PUBLIC ${FUSE_INCLUDE_DIRS})

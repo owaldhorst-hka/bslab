@@ -9,7 +9,8 @@
 #include <sys/stat.h>
 #include <string.h>
 
-#include "catch.hpp"
+#include "../catch/catch.hpp"
+
 #include "tools.hpp"
 
 #define FILENAME "file"
@@ -94,7 +95,7 @@ TEST_CASE("T-1.03", "[Part_1]") {
     char *buf4= new char[strlen(buf3)];
 
     int fd;
-    ssize_t b;
+//    ssize_t b;
 
     // remove file (just to be sure)
     unlink(FILENAME);
@@ -145,7 +146,7 @@ TEST_CASE("T-1.06", "[Part_1]") {
     char *buf4= new char[strlen(buf3)];
 
     int fd;
-    ssize_t b;
+//    ssize_t b;
 
     // remove file (just to be sure)
     unlink(FILENAME);
@@ -197,7 +198,7 @@ TEST_CASE("T-1.04", "[Part_1]") {
     char *buf4= new char[strlen(buf3)];
 
     int fd;
-    ssize_t b;
+//    ssize_t b;
 
     // remove file (just to be sure)
     unlink(FILENAME);
@@ -247,7 +248,7 @@ TEST_CASE("T-1.05", "[Part_1]") {
     char *buf4= new char[strlen(buf1)];
 
     int fd;
-    ssize_t b;
+//    ssize_t b;
 
     // remove file (just to be sure)
     unlink(FILENAME);
