@@ -129,7 +129,7 @@ int MyFS::fuseRmdir(const char *path) {
     return 0;
 }
 
-int MyFS::fuseSymlink(const char *path, const char *link) {
+int MyFS::fuseSymlink(const char *linkname, const char *path) {
     LOGM();
     return 0;
 }
