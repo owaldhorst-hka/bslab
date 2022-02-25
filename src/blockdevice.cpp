@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <cassert>
+#include <cstring>
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -90,8 +91,11 @@ int BlockDevice::read(uint32_t blockNo, char *buffer) {
         return -errno;
     
     int size = (this->blockSize);
-    if (::read (this->contFile, buffer, size) != size)
+    ssize_t r = ::read(this->contFile, buffer, size);
+    if (r < 0)
         return -errno;
+    if (r < size)
+        memset(buffer + r, 0, size - r);
 
     return 0;
 }
@@ -105,9 +109,12 @@ int BlockDevice::write(uint32_t blockNo, char *buffer) {
     if (lseek (this->contFile, pos, SEEK_SET) != pos)
         return -errno;
 
-    int __size = (this->blockSize);
-    if (::write (this->contFile, buffer, __size) != __size)
+    int size = (this->blockSize);
+    ssize_t w = ::write(this->contFile, buffer, size);
+    if (w < 0)
         return -errno;
+    if (w < size)
+        return -ENOSPC;
 
     return 0;
 }

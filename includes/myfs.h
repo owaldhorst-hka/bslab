@@ -38,7 +38,7 @@ public:
     virtual int fuseMkdir(const char *path, mode_t mode);
     virtual int fuseUnlink(const char *path);
     virtual int fuseRmdir(const char *path);
-    virtual int fuseSymlink(const char *path, const char *link);
+    virtual int fuseSymlink(const char *linkname, const char *path);
     virtual int fuseRename(const char *path, const char *newpath);
     virtual int fuseLink(const char *path, const char *newpath);
     virtual int fuseChmod(const char *path, mode_t mode);
