@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 
 include_directories(includes)
 
@@ -17,7 +18,10 @@ add_executable(mount.myfs src/blockdevice.cpp
         src/myinmemoryfs.cpp
         src/myondiskfs.cpp
         src/wrap.cpp
-        src/mount.myfs.c)
+        src/mount.myfs.c
+        src/dmap.cpp
+        src/fat.cpp
+        src/root.cpp)
 
 add_executable(unittests src/blockdevice.cpp
         src/myfs.cpp
@@ -26,7 +30,10 @@ add_executable(unittests src/blockdevice.cpp
         testing/main.cpp
         testing/utest-blockdevice.cpp
         testing/utest-myfs.cpp
-        testing/tools.cpp testing/itest.cpp)
+        testing/tools.cpp testing/itest.cpp
+        src/dmap.cpp
+        src/fat.cpp
+        src/root.cpp)
 
 add_executable(integrationtests
         src/blockdevice.cpp
@@ -35,10 +42,13 @@ add_executable(integrationtests
         src/myondiskfs.cpp
         testing/main.cpp
         testing/itest.cpp
-        testing/tools.cpp)
+        testing/tools.cpp
+        src/dmap.cpp
+        src/fat.cpp
+        src/root.cpp)
 
 find_package(PkgConfig)
-pkg_check_modules(FUSE fuse)
+find_package(FUSE REQUIRED)
 
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR/catch})
 add_library(Catch INTERFACE)
