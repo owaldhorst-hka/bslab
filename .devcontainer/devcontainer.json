@@ -15,8 +15,11 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
+		// required
 		"ms-vscode.cpptools",
 		"ms-vscode.cmake-tools",
+		"rioj7.command-variable",
+		// optional
 		"yzhang.markdown-all-in-one"
 	],
 
