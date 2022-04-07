@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "CMake Target starten (gdb)",
+            "name": "Starten (gdb)",
             "type": "cppdbg",
             "request": "launch",
             // Resolved by CMake Tools:
@@ -37,7 +37,7 @@
             ]
         },
         {
-          "name": "CMake Target starten (lldb)",
+          "name": "Starten (lldb)",
           "type": "cppdbg",
           "request": "launch",
           // Resolved by CMake Tools:
