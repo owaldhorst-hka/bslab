@@ -310,7 +310,7 @@ void* MyOnDiskFS::fuseInit(struct fuse_conn_info *conn) {
         }
      }
 
-    return 0;
+    return MyFS::fuseInit(conn);
 }
 
 /// @brief Clean up a file system.

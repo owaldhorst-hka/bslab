@@ -111,6 +111,9 @@ int MyFS::fuseReaddir(const char *path, void *buf, fuse_fill_dir_t filler, off_t
 }
 
 void* MyFS::fuseInit(struct fuse_conn_info *conn) {
+    // prevent FUSE from splitting reads & writes in 4K blocks
+	conn->want |= FUSE_CAP_BIG_WRITES;
+    
     RETURN(0);
 }
 

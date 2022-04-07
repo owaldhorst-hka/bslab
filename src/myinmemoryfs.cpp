@@ -367,7 +367,7 @@ void* MyInMemoryFS::fuseInit(struct fuse_conn_info *conn) {
         // TODO: [PART 1] Implement your initialization methods here
     }
 
-    RETURN(0);
+    return MyFS::fuseInit(conn);
 }
 
 /// @brief Clean up a file system.
