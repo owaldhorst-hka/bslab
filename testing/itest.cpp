@@ -105,7 +105,7 @@ TEST_CASE("T-1.03", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Write to the file
-    REQUIRE(write(fd, buf1, strlen(buf1)) == strlen(buf1));
+    REQUIRE(write(fd, buf1, strlen(buf1)) == (ssize_t) strlen(buf1));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -116,7 +116,7 @@ TEST_CASE("T-1.03", "[Part_1]") {
 
     // Write to the file at position 1
     REQUIRE(lseek(fd, 1, SEEK_SET) == 1);
-    REQUIRE(write(fd, buf2, strlen(buf2)) == strlen(buf2));
+    REQUIRE(write(fd, buf2, strlen(buf2)) == (ssize_t) strlen(buf2));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -126,7 +126,7 @@ TEST_CASE("T-1.03", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Read from the file
-    REQUIRE(read(fd, buf4, strlen(buf3)) == strlen(buf3));
+    REQUIRE(read(fd, buf4, strlen(buf3)) == (ssize_t) strlen(buf3));
     REQUIRE(memcmp(buf3, buf4, strlen(buf3)) == 0);
 
     // Close file
@@ -156,7 +156,7 @@ TEST_CASE("T-1.06", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Write to the file
-    REQUIRE(write(fd, buf1, strlen(buf1)) == strlen(buf1));
+    REQUIRE(write(fd, buf1, strlen(buf1)) == (ssize_t) strlen(buf1));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -167,7 +167,7 @@ TEST_CASE("T-1.06", "[Part_1]") {
 
     // Write to the file at position 3
     REQUIRE(lseek(fd, 3, SEEK_SET) == 3);
-    REQUIRE(write(fd, buf2, strlen(buf2)) == strlen(buf2));
+    REQUIRE(write(fd, buf2, strlen(buf2)) == (ssize_t) strlen(buf2));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -177,7 +177,7 @@ TEST_CASE("T-1.06", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Read from the file
-    REQUIRE(read(fd, buf4, strlen(buf3)) == strlen(buf3));
+    REQUIRE(read(fd, buf4, strlen(buf3)) == (ssize_t) strlen(buf3));
     REQUIRE(memcmp(buf3, buf4, strlen(buf3)) == 0);
 
     // Close file
@@ -208,7 +208,7 @@ TEST_CASE("T-1.04", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Write to the file
-    REQUIRE(write(fd, buf1, strlen(buf1)) == strlen(buf1));
+    REQUIRE(write(fd, buf1, strlen(buf1)) == (ssize_t) strlen(buf1));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -219,7 +219,7 @@ TEST_CASE("T-1.04", "[Part_1]") {
 
     // Write to the file at position 5
     REQUIRE(lseek(fd, 5, SEEK_SET) == 5);
-    REQUIRE(write(fd, buf2, strlen(buf2)) == strlen(buf2));
+    REQUIRE(write(fd, buf2, strlen(buf2)) == (ssize_t) strlen(buf2));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -229,7 +229,7 @@ TEST_CASE("T-1.04", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Read from the file
-    REQUIRE(read(fd, buf4, strlen(buf3)) == strlen(buf3));
+    REQUIRE(read(fd, buf4, strlen(buf3)) == (ssize_t) strlen(buf3));
     REQUIRE(memcmp(buf3, buf4, strlen(buf3)) == 0);
 
     // Close file
@@ -258,7 +258,7 @@ TEST_CASE("T-1.05", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Write to the file
-    REQUIRE(write(fd, buf1, strlen(buf1)) == strlen(buf1));
+    REQUIRE(write(fd, buf1, strlen(buf1)) == (ssize_t) strlen(buf1));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -269,7 +269,7 @@ TEST_CASE("T-1.05", "[Part_1]") {
 
     // Write to the file at position 7
     REQUIRE(lseek(fd, 7, SEEK_SET) == 7);
-    REQUIRE(write(fd, buf2, strlen(buf2)) == strlen(buf2));
+    REQUIRE(write(fd, buf2, strlen(buf2)) == (ssize_t) strlen(buf2));
 
     // Close file
     REQUIRE(close(fd) >= 0);
@@ -279,10 +279,10 @@ TEST_CASE("T-1.05", "[Part_1]") {
     REQUIRE(fd >= 0);
 
     // Read from the file
-    REQUIRE(read(fd, buf4, strlen(buf1)) == strlen(buf1));
+    REQUIRE(read(fd, buf4, strlen(buf1)) == (ssize_t) strlen(buf1));
     REQUIRE(memcmp(buf1, buf4, strlen(buf1)) == 0);
     REQUIRE(lseek(fd, 7, SEEK_SET) == 7);
-    REQUIRE(read(fd, buf4, strlen(buf2)) == strlen(buf2));
+    REQUIRE(read(fd, buf4, strlen(buf2)) == (ssize_t) strlen(buf2));
     REQUIRE(memcmp(buf2, buf4, strlen(buf2)) == 0);
 
     // Close file
@@ -396,7 +396,7 @@ TEST_CASE("T-1.09", "[Part_1]") {
     memset(r, 0, bufferSize);
 
     int ret;
-    size_t b;
+    off_t b;
 
     int fd[noFiles];
 
