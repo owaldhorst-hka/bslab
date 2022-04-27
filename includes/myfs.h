@@ -25,7 +25,7 @@ protected:
 public:
     static MyFS *Instance();
     
-    // TODO: [PART 2] You may add attributes of your file system here
+    // You may add common attributes of MyInMemoryFS and MyOnDiskFS here
     
     MyFS();
     virtual ~MyFS();

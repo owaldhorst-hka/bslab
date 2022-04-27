@@ -30,7 +30,7 @@ MyOnDiskFS::MyOnDiskFS() : MyFS() {
     // create a block device object
     this->blockDevice= new BlockDevice(BLOCK_SIZE);
 
-    // TODO: [PART 2] Add your constructor code here
+    // TODO: [PART 2] You may add your own constructor code here.
 
 }
 
@@ -41,7 +41,7 @@ MyOnDiskFS::~MyOnDiskFS() {
     // free block device object
     delete this->blockDevice;
 
-    // TODO: [PART 2] Add your cleanup code here
+    // TODO: [PART 2] You may add your own destructor code here.
 
 }
 
@@ -139,9 +139,9 @@ int MyOnDiskFS::fuseChown(const char *path, uid_t uid, gid_t gid) {
 
 /// @brief Open a file.
 ///
-/// Open a file for reading or writing. This includes checking the permissions of the current user and incrementing the
-/// open file count.
-/// You do not have to check file permissions, but can assume that it is always ok to access the file.
+/// Open a file for reading or writing. This usualy includes checking the permissions of the current user and 
+/// incrementing the open file count. For simplification, you do not have to check file permissions, but can 
+/// assume that it is always ok to access the file.
 /// \param [in] path Name of the file, starting with "/".
 /// \param [out] fileInfo Can be ignored in Part 1
 /// \return 0 on success, -ERRNO on failure.
@@ -319,7 +319,7 @@ void* MyOnDiskFS::fuseInit(struct fuse_conn_info *conn) {
 void MyOnDiskFS::fuseDestroy() {
     LOGM();
 
-    // TODO: [PART 2] Implement this!
+    // TODO: [PART 2] You may add some cleanup code here.
 
 }
 

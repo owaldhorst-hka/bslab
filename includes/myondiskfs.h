@@ -16,7 +16,7 @@ protected:
 public:
     static MyOnDiskFS *Instance();
 
-    // TODO: [PART 1] Add attributes of your file system here
+    // TODO: [PART 2] Add attributes of your file system here
 
     MyOnDiskFS();
     ~MyOnDiskFS();
